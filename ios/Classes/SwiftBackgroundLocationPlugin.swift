@@ -27,12 +27,15 @@ public class SwiftBackgroundLocationPlugin: NSObject, FlutterPlugin, CLLocationM
 
         SwiftBackgroundLocationPlugin.channel?.invokeMethod("location", arguments: "method")
 
+        SwiftBackgroundLocationPlugin.locationManager?.desiredAccuracy = kCLLocationAccuracyHundredMeters
+        SwiftBackgroundLocationPlugin.locationManager?.distanceFilter = 250
+
         if (call.method == "start_location_service") {
             SwiftBackgroundLocationPlugin.channel?.invokeMethod("location", arguments: "start_location_service")            
-            SwiftBackgroundLocationPlugin.locationManager?.startMonitoringSignificantLocationChanges()
+            SwiftBackgroundLocationPlugin.locationManager?.startUpdatingLocation()
         } else if (call.method == "stop_location_service") {
             SwiftBackgroundLocationPlugin.channel?.invokeMethod("location", arguments: "stop_location_service")
-            SwiftBackgroundLocationPlugin.locationManager?.stopMonitoringSignificantLocationChanges()
+            SwiftBackgroundLocationPlugin.locationManager?.sopUpdatingLocation()
         }
     }
     
