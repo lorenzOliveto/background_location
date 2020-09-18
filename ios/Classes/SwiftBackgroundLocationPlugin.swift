@@ -27,10 +27,9 @@ public class SwiftBackgroundLocationPlugin: NSObject, FlutterPlugin, CLLocationM
 
         SwiftBackgroundLocationPlugin.channel?.invokeMethod("location", arguments: "method")
 
-        SwiftBackgroundLocationPlugin.locationManager?.desiredAccuracy = kCLLocationAccuracyHundredMeters
-        SwiftBackgroundLocationPlugin.locationManager?.distanceFilter = 250
-
         if (call.method == "start_location_service") {
+            SwiftBackgroundLocationPlugin.locationManager?.desiredAccuracy = kCLLocationAccuracyHundredMeters
+            SwiftBackgroundLocationPlugin.locationManager?.distanceFilter = 50
             SwiftBackgroundLocationPlugin.channel?.invokeMethod("location", arguments: "start_location_service")            
             SwiftBackgroundLocationPlugin.locationManager?.startUpdatingLocation()
         } else if (call.method == "stop_location_service") {
@@ -57,12 +56,5 @@ public class SwiftBackgroundLocationPlugin: NSObject, FlutterPlugin, CLLocationM
         ] as [String : Any]
 
         SwiftBackgroundLocationPlugin.channel?.invokeMethod("location", arguments: location)
-    }
-
-    public func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-       if let error = error as? CLError, error.code == .denied {
-          manager.stopMonitoringSignificantLocationChanges()
-          return
-       }
     }
 }

@@ -166,9 +166,15 @@ class BackgroundLocationPlugin() : MethodCallHandler, PluginRegistry.RequestPerm
 
         } else {
             Log.i(TAG, "Requesting permission")
-            ActivityCompat.requestPermissions(registrar.activity(),
-                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                    REQUEST_PERMISSIONS_REQUEST_CODE)
+            if (Build.VERSION.SDK_INT >= 29) {
+                ActivityCompat.requestPermissions(registrar.activity(),
+                        arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_BACKGROUND_LOCATION),
+                        REQUEST_PERMISSIONS_REQUEST_CODE)
+            } else {
+                ActivityCompat.requestPermissions(registrar.activity(),
+                        arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                        REQUEST_PERMISSIONS_REQUEST_CODE)
+            }
         }
     }
 
