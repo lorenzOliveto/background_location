@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/backgeound_location.iml" filepath="$PROJECT_DIR$/backgeound_location.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/background_location.iml" filepath="$PROJECT_DIR$/.idea/modules/background_location.iml" group="background_location" />
     </modules>
   </component>
 </project>
