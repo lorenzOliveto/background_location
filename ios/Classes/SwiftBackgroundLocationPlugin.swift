@@ -35,7 +35,7 @@ public class SwiftBackgroundLocationPlugin: NSObject, FlutterPlugin, CLLocationM
             SwiftBackgroundLocationPlugin.locationManager?.startUpdatingLocation()
         } else if (call.method == "stop_location_service") {
             SwiftBackgroundLocationPlugin.channel?.invokeMethod("location", arguments: "stop_location_service")
-            SwiftBackgroundLocationPlugin.locationManager?.sopUpdatingLocation()
+            SwiftBackgroundLocationPlugin.locationManager?.stopUpdatingLocation()
         }
     }
     
