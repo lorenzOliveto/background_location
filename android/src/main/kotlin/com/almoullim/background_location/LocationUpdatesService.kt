@@ -1,6 +1,9 @@
 package com.almoullim.background_location
 
-import android.app.*
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.Service
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -10,7 +13,6 @@ import android.os.*
 import androidx.core.app.NotificationCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.android.gms.location.*
-import com.almoullim.background_location.Utils
 
 
 class LocationUpdatesService : Service() {
@@ -48,17 +50,14 @@ class LocationUpdatesService : Service() {
         get() {
             val intent = Intent(this, LocationUpdatesService::class.java)
             intent.putExtra(EXTRA_STARTED_FROM_NOTIFICATION, true)
-            
-            val builder = NotificationCompat.Builder(this)
+
+            val builder = NotificationCompat.Builder(this, CHANNEL_ID)
                     .setContentTitle("Background service is running")
                     .setOngoing(true)
                     .setSound(null)
-                    .setPriority(Notification.PRIORITY_HIGH)
+                    .setPriority(NotificationCompat.PRIORITY_MIN)
                     .setSmallIcon(R.drawable.navigation_empty_icon)
                     .setWhen(System.currentTimeMillis())
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                builder.setChannelId(CHANNEL_ID)
-            }
 
             return builder.build()
         }
@@ -72,12 +71,10 @@ class LocationUpdatesService : Service() {
         mLocationCallback = object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult?) {
                 super.onLocationResult(locationResult)
-
-
-
                 onNewLocation(locationResult!!.lastLocation)
             }
         }
+
         createLocationRequest()
         getLastLocation()
 
@@ -86,17 +83,18 @@ class LocationUpdatesService : Service() {
         handlerThread.start()
         mServiceHandler = Handler(handlerThread.looper)
 
-
         mNotificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val name = "Application Name"
-            val mChannel = NotificationChannel(CHANNEL_ID, name, NotificationManager.IMPORTANCE_LOW)
+            val mChannel = NotificationChannel(CHANNEL_ID, name, NotificationManager.IMPORTANCE_MIN)
+            mChannel.enableLights(false)
+            mChannel.setShowBadge(false)
+            mChannel.enableVibration(false)
             mChannel.setSound(null, null)
             mNotificationManager!!.createNotificationChannel(mChannel)
         }
 
         startForeground(NOTIFICATION_ID, notification)
-
 
         broadcastReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context?, intent: Intent?) {
